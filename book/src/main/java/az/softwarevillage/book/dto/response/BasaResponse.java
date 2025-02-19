@@ -15,7 +15,7 @@ public class BasaResponse {
         this.timestamp = timestamp;
     }
 
-    public BasaResponse() {
+    public BasaResponse(int i, String s) {
         // default constructor
     }
 

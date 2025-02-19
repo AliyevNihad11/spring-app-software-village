@@ -4,10 +4,12 @@ import az.softwarevillage.book.dto.request.UserRequest;
 import az.softwarevillage.book.dto.response.BasaResponse;
 import az.softwarevillage.book.dto.response.UserResponse;
 import az.softwarevillage.book.service.UserService;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Serializers;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -32,11 +34,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("id")
+    @GetMapping("/{id}")
     public UserResponse getUserById(@PathVariable ("id") Long id){
         return userService.getUserById(id);
-
-
     }
-
+    @PutMapping("{id}")
+    public BasaResponse updateUser(@PathVariable("id") Long id,@RequestBody UserRequest userRequest){
+        return userService.updateUser(id,userRequest);
+    }
 }

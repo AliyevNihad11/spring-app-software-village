@@ -62,12 +62,12 @@ public class UserService {
     }
 
     public UserResponse getUserById(Long id) {
-        User user = userRepository.findByIdAndStatus(id, EnumAvailableStatus.ACTIVE.getValue());
+        User user = checkUser(id, "User not Found!");
 
-        if (user == null) {
-            throw new UserNotFoundException("User not Found!");
-        }
+        return mapEntityToResponse(user);
+    }
 
+    private  UserResponse mapEntityToResponse(User user) {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setEmail(user.getEmail());
@@ -80,6 +80,45 @@ public class UserService {
         return userResponse;
     }
 
+    public BasaResponse updateUser(Long id,UserRequest userRequest){
+
+        User user = checkUser(id, "User not found!");
+
+        user.setFirstname(userRequest.getFirstname());
+        user.setUsername(userRequest.getUsername());
+        user.setLastname(userRequest.getLastname());
+        user.setPassword(userRequest.getPassword());
+        user.setPhone(userRequest.getPhone());
+        user.setEmail(userRequest.getEmail());
+        userRepository.save(user);
+
+        return BasaResponse.getSuccessMessage();
+    }
+
+    private User checkUser(Long id, String message) {
+        User user = userRepository.findByIdAndStatus(id, EnumAvailableStatus.ACTIVE.getValue());
+
+        if (user == null) {
+            throw new UserNotFoundException(message);
+        }
+        return user;
+    }
+
+    private User mapResponseToEntity(UserResponse userResponse) {
+
+            User user = new User(); // Yeni User obyekti yarat
+            user.setId(userResponse.getId());
+            user.setEmail(userResponse.getEmail());
+            user.setFirstname(userResponse.getFirstname());
+            user.setLastname(userResponse.getLastname());
+            user.setPassword(userResponse.getPassword());
+            user.setPhone(userResponse.getPhone());
+            user.setUsername(userResponse.getUsername());
+
+            return user;
+
+
+    }
 
 
     // `User` listini `UserResponse` listinə çevirmək
