@@ -4,6 +4,7 @@ import az.softwarevillage.book.dto.request.UserRequest;
 import az.softwarevillage.book.dto.response.BasaResponse;
 import az.softwarevillage.book.dto.response.UserResponse;
 import az.softwarevillage.book.enums.EnumAvailableStatus;
+import az.softwarevillage.book.enums.ErrorCodeEnum;
 import az.softwarevillage.book.exception.UserExistException;
 import az.softwarevillage.book.exception.UserNotFoundException;
 import az.softwarevillage.book.model.User;
@@ -46,11 +47,11 @@ public class UserService {
         List<UserResponse> users = getAllUsers();  // `getAllUsers()` əvəzinə `userRepository.findAll()` istifadə et
         for (UserResponse u : users) {
             if (u.getEmail().equals(userRequest.getEmail())) {
-                throw new UserExistException("Email already exist!");
+                throw new UserExistException(ErrorCodeEnum.Email_Already_Exist_Error.getMessage());
             }
 
             if (u.getUsername().equals(userRequest.getUsername())) {
-                throw new UserExistException("Username already exist!");
+                throw new UserExistException(ErrorCodeEnum.Username_Already_Exist_Error.getMessage());
             }
         }
     }
@@ -99,7 +100,7 @@ public class UserService {
         User user = userRepository.findByIdAndStatus(id, EnumAvailableStatus.ACTIVE.getValue());
 
         if (user == null) {
-            throw new UserNotFoundException(message);
+            throw new UserNotFoundException(ErrorCodeEnum.User_Not_Found_Error.getMessage());
         }
         return user;
     }
